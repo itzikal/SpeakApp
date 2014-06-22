@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/SpeakApp.iml" filepath="$PROJECT_DIR$/SpeakApp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/speakapp/speakapp.iml" filepath="$PROJECT_DIR$/speakapp/speakapp.iml" />
+    </modules>
+  </component>
+</project>
+
