@@ -207,7 +207,7 @@ public class MainActivity extends Activity
 //                swipe += "Swipe Down\n";
 //            }else{
 //                swipe += "\n";
-//            }
+//            }TEST
 
 
 
