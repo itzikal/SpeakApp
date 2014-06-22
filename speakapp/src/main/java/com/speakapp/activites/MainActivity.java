@@ -196,6 +196,7 @@ public class MainActivity extends Activity
 //            }else{
 //                swipe += "\n";
 //            }
+            // Aviv was here
             Log.d("TAG", "onFling, e1: " + e1.getY() + " , e2: " +e2.getY()+ ", bottom: "+mDecorView.getBottom());
             if((e1.getY() - e2.getY()) > sensitvity && e1.getY() > mDecorView.getBottom() - 200)
             {
