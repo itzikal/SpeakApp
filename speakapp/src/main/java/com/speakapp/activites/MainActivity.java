@@ -8,6 +8,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.TextView;
 
 import com.speakapp.adapters.BoardAdapter;
@@ -58,8 +59,8 @@ public class MainActivity extends Activity
             }
         });
         mGestureDetector = new GestureDetector(this, new MyGestureListener());
-//        GridView gridview = (GridView) findViewById(R.id.gridView);
-//        gridview.setAdapter(m_boardAdapter);
+        GridView gridview = (GridView) findViewById(R.id.gridView);
+        gridview.setAdapter(m_boardAdapter);
 
         mRecordText = (TextView)findViewById(R.id.recording_text);
 
