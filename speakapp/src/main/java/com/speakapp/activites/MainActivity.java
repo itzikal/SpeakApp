@@ -209,7 +209,7 @@ public class MainActivity extends Activity
 //            }else{
 //                swipe += "\n";
 //            }TEST
-// Smigoliliii
+
 
 
             return super.onFling(e1, e2, velocityX, velocityY);
