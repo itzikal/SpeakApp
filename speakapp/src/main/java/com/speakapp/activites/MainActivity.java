@@ -1,6 +1,7 @@
 package com.speakapp.activites;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.speakapp.adapters.BoardAdapter;
@@ -21,6 +23,8 @@ import java.util.ArrayList;
 
 public class MainActivity extends Activity
 {
+
+    private static final int GET_NEW_CARD = 1;
     private ArrayList<String> m_activeBoard;
     private BoardAdapter m_boardAdapter;
     private SoundManager mSoundManager;
@@ -28,8 +32,11 @@ public class MainActivity extends Activity
     private TextView mRecordText;
     private View mDecorView;
     private GestureDetector mGestureDetector;
+    private ImageView mImageView;
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         init();
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -62,10 +69,11 @@ public class MainActivity extends Activity
         GridView gridview = (GridView) findViewById(R.id.gridView);
         gridview.setAdapter(m_boardAdapter);
 
-        mRecordText = (TextView)findViewById(R.id.recording_text);
+        mRecordText = (TextView) findViewById(R.id.recording_text);
 
-        final RecordButton record = (RecordButton)findViewById(R.id.record_btn);
-        record.setSoundManagerEventsListener(new RecordButton.OnAudioRecordListener() {
+        final RecordButton record = (RecordButton) findViewById(R.id.record_btn);
+        record.setSoundManagerEventsListener(new RecordButton.OnAudioRecordListener()
+        {
             @Override
             public void onStartRecording()
             {
@@ -79,7 +87,7 @@ public class MainActivity extends Activity
             }
         });
 
-        final Button play = (Button)findViewById(R.id.play_btn);
+        final Button play = (Button) findViewById(R.id.play_btn);
         play.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -93,6 +101,14 @@ public class MainActivity extends Activity
                 {
                     getSoundManager().startPlaying();
                 }
+            }
+        });
+
+        findViewById(R.id.add_new_card_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+                startActivityForResult(new Intent(MainActivity.this, CreateCardActivity.class), GET_NEW_CARD);
             }
         });
     }

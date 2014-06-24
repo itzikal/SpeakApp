@@ -10,6 +10,10 @@
         android:layout_height="wrap_content"
         android:layout_width="wrap_content">
 
+        <Button  android:text="add card"
+                 android:id="@+id/add_new_card_btn"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"/>
         <com.speakapp.ui.RecordButton
             android:text="Record"
             android:id="@+id/record_btn"
@@ -39,7 +43,10 @@
             android:layout_gravity="top"
             android:id="@+id/topLayout"
             >
-
+<ImageView
+    android:id="@+id/image_view"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"/>
             <Button
                 android:layout_width="150dp"
                 android:layout_height="match_parent"
