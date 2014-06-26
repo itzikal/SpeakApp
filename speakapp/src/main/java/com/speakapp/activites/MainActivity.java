@@ -1,38 +1,30 @@
 package com.speakapp.activites;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
+import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.speakapp.adapters.BoardAdapter;
-import com.speakapp.managers.SoundManager;
+import com.speakapp.adapters.CardsAdapter;
+import com.speakapp.models.Card;
 import com.speakapp.speakapp.R;
-import com.speakapp.ui.RecordButton;
 
 import java.util.ArrayList;
 
 
 public class MainActivity extends Activity
 {
-
     private static final int GET_NEW_CARD = 1;
-    private ArrayList<String> m_activeBoard;
-    private BoardAdapter m_boardAdapter;
-    private SoundManager mSoundManager;
-
-    private TextView mRecordText;
+    private ArrayList<Card> mActiveBoard;
+    private CardsAdapter mAdapter;
     private View mDecorView;
     private GestureDetector mGestureDetector;
-    private ImageView mImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -66,52 +58,38 @@ public class MainActivity extends Activity
             }
         });
         mGestureDetector = new GestureDetector(this, new MyGestureListener());
-        GridView gridview = (GridView) findViewById(R.id.gridView);
-        gridview.setAdapter(m_boardAdapter);
 
-        mRecordText = (TextView) findViewById(R.id.recording_text);
-
-        final RecordButton record = (RecordButton) findViewById(R.id.record_btn);
-        record.setSoundManagerEventsListener(new RecordButton.OnAudioRecordListener()
+        final TextView textLine = (TextView) findViewById(R.id.text_line);
+        final GridView gridview = (GridView) findViewById(R.id.board_gird_view);
+        gridview.setAdapter(mAdapter);
+        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener()
         {
             @Override
-            public void onStartRecording()
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
             {
-                mRecordText.setText("Recording...");
-            }
-
-            @Override
-            public void onStopRecording()
-            {
-                mRecordText.setText("Recording ended");
+                Card card = (Card) gridview.getAdapter().getItem(i);
+                textLine.append(card.getName());
             }
         });
-
-        final Button play = (Button) findViewById(R.id.play_btn);
-        play.setOnClickListener(new View.OnClickListener()
+        findViewById(R.id.clear_text_line).setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
             {
-                if (getSoundManager().isPlaying())
-                {
-                    getSoundManager().stopPlaying();
-                }
-                else
-                {
-                    getSoundManager().startPlaying();
-                }
-            }
-        });
 
-        findViewById(R.id.add_new_card_btn).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view)
-            {
-                startActivityForResult(new Intent(MainActivity.this, CreateCardActivity.class), GET_NEW_CARD);
+                textLine.setText("");
             }
         });
+        //        findViewById(R.id.add_new_card_btn).setOnClickListener(new View.OnClickListener() {
+        //            @Override
+        //            public void onClick(View view)
+        //            {
+        //                startActivityForResult(new Intent(MainActivity.this, CreateCardActivity.class), GET_NEW_CARD);
+        //            }
+        //        });
     }
+
+
 
     @Override
     public boolean onTouchEvent(MotionEvent event)
@@ -119,50 +97,19 @@ public class MainActivity extends Activity
         return mGestureDetector.onTouchEvent(event);
     }
 
-    private SoundManager getSoundManager()
+
+    private void init()
     {
-        if(mSoundManager == null)
-        {
-            mSoundManager = new SoundManager(new SoundManager.SoundManagerEventsListener() {
-                @Override
-                public void onStartRecording()
-                {
-                    mRecordText.setText("Recording...");
-                }
-
-                @Override
-                public void onStopRecording()
-                {
-                    mRecordText.setText("Recording ended");
-                }
-
-                @Override
-                public void onStartPlaying()
-                {
-                    mRecordText.setText("Playing sound started");
-                }
-
-                @Override
-                public void onStopPlaying()
-                {
-                    mRecordText.setText("Playing sound ended");
-                }
-            });
-        }
-
-        return mSoundManager;
-    }
-
-    private void init() {
-        m_activeBoard = new ArrayList<String>();
+        mActiveBoard = new ArrayList<Card>();
         fillDemoValues(); // temp
-        m_boardAdapter = new BoardAdapter(this, m_activeBoard);
+        mAdapter = new CardsAdapter(this, R.layout.card_layout, mActiveBoard);
     }
 
-    private void fillDemoValues() {
-        for(int i = 0; i < 20; i++) {
-            m_activeBoard.add("card " + i);
-        }
+    private void fillDemoValues()
+    {
+        mActiveBoard.add(new Card("כלב", R.drawable.dog));
+        mActiveBoard.add(new Card("חתול", R.drawable.cat));
+        mActiveBoard.add(new Card("איציק", R.drawable.mouse));
     }
 
     @Override
@@ -175,57 +122,53 @@ public class MainActivity extends Activity
     }
 
     // This snippet hides the system bars.
-    private void hideSystemUI() {
+    private void hideSystemUI()
+    {
         // Set the IMMERSIVE flag.
         // Set the content to appear under the system bars so that the content
         // doesn't resize when the system bars hide and show.
-        mDecorView.setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
+        mDecorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
                         | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
-                        | View.SYSTEM_UI_FLAG_IMMERSIVE);
+                        | View.SYSTEM_UI_FLAG_IMMERSIVE
+        );
     }
 
     // This snippet shows the system bars. It does this by removing all the flags
     // except for the ones that make the content appear under the system bars.
-    private void showSystemUI() {
-        mDecorView.setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+    private void showSystemUI()
+    {
+        mDecorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+        );
     }
 
     class MyGestureListener extends GestureDetector.SimpleOnGestureListener
     {
         @Override
-        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
-                               float velocityY) {
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY)
+        {
             String swipe = "";
             float sensitvity = 50;
 
 
-//            if((e1.getX() - e2.getX()) > sensitvity){
-//                swipe += "Swipe Left\n";
-//            }else if((e2.getX() - e1.getX()) > sensitvity){
-//                swipe += "Swipe Right\n";
-//            }else{
-//                swipe += "\n";
-//            }
+            //            if((e1.getX() - e2.getX()) > sensitvity){
+            //                swipe += "Swipe Left\n";
+            //            }else if((e2.getX() - e1.getX()) > sensitvity){
+            //                swipe += "Swipe Right\n";
+            //            }else{
+            //                swipe += "\n";
+            //            }
             // Aviv was here
-            Log.d("TAG", "onFling, e1: " + e1.getY() + " , e2: " +e2.getY()+ ", bottom: "+mDecorView.getBottom());
-            if((e1.getY() - e2.getY()) > sensitvity && e1.getY() > mDecorView.getBottom() - 200)
+            Log.d("TAG", "onFling, e1: " + e1.getY() + " , e2: " + e2.getY() + ", bottom: " + mDecorView.getBottom());
+            if ((e1.getY() - e2.getY()) > sensitvity && e1.getY() > mDecorView.getBottom() - 200)
             {
                 swipe += "Swipe Up\n";
                 onSwipeBottomUp();
             }
-//            }else if((e2.getY() - e1.getY()) > sensitvity){
-//                swipe += "Swipe Down\n";
-//            }else{
-//                swipe += "\n";
-//            }TEST
-
+            //            }else if((e2.getY() - e1.getY()) > sensitvity){
+            //                swipe += "Swipe Down\n";
+            //            }else{
+            //                swipe += "\n";
+            //            }TEST
 
 
             return super.onFling(e1, e2, velocityX, velocityY);
@@ -235,7 +178,6 @@ public class MainActivity extends Activity
     private void onSwipeBottomUp()
     {
         showSystemUI();
-        mRecordText.setText("Swipe successful");
     }
 }
 
