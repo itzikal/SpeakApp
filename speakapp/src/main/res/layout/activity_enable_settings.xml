@@ -11,11 +11,13 @@
         android:orientation="vertical">
 
         <TextView
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="{please enter 'Settings' to continue"/>
 
         <EditText
+            android:id="@+id/enable_setting_text_view"
             android:layout_width="300dp"
             android:layout_height="wrap_content"/>
 

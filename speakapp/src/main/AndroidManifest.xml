@@ -33,6 +33,8 @@
                   android:label="@string/create_new_card"/>
         <activity android:name="com.speakapp.activites.EnableSettingActivity"
                   android:label="@string/enable_setting"/>
+        <activity android:name="com.speakapp.activites.SettingsActivity"
+        android:label="@string/settings"/>
     </application>
 
 </manifest>
