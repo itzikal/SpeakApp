@@ -7,5 +7,6 @@
     <string name="homeBtn">Home</string>
     <string name="deleteBtn">Delete</string>
     <string name="create_new_card">Create New Card</string>
+    <string name="enable_setting">Confirm</string>
 
 </resources>

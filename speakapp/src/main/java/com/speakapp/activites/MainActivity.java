@@ -1,9 +1,12 @@
 package com.speakapp.activites;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -89,7 +92,26 @@ public class MainActivity extends Activity
         //        });
     }
 
+    @Override
+    public boolean onMenuItemSelected(int featureId, MenuItem item)
+    {
+        if (item.getItemId() == R.id.action_settings)
+        {
+            startSettingActivity();
+        }
+        return super.onMenuItemSelected(featureId, item);
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
 
+    private void startSettingActivity()
+    {
+        startActivity(new Intent(this, EnableSettingActivity.class));
+    }
 
     @Override
     public boolean onTouchEvent(MotionEvent event)

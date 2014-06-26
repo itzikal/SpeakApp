@@ -31,6 +31,8 @@
 
         <activity android:name="com.speakapp.activites.CreateCardActivity"
                   android:label="@string/create_new_card"/>
+        <activity android:name="com.speakapp.activites.EnableSettingActivity"
+                  android:label="@string/enable_setting"/>
     </application>
 
 </manifest>
