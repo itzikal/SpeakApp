@@ -13,9 +13,14 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.speakapp.adapters.CardsAdapter;
+import com.speakapp.models.Board;
+import com.speakapp.models.BoardSize;
 import com.speakapp.models.Card;
+import com.speakapp.models.CardPosition;
+import com.speakapp.models.CardSize;
 import com.speakapp.speakapp.R;
 
 import java.util.ArrayList;
@@ -36,6 +41,23 @@ public class MainActivity extends Activity
         init();
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
+        findViewById(R.id.stam).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Board board = new Board(new BoardSize(10,5));
+                Card itzik = new Card("itzik", 0);
+                itzik.setPosition(new CardPosition(0,0));
+                itzik.setSize(new CardSize(2,2));
+                board.addCard(itzik);
+
+                Card itzik2 = new Card("itzik", 0);
+                itzik2.setPosition(new CardPosition(1,1));
+                itzik2.setSize(new CardSize(2,2));
+                board.addCard(itzik2);
+
+                Toast.makeText(MainActivity.this, "number of cards: "+board.getCards().size(), Toast.LENGTH_LONG ).show();
+            }
+        });
         mDecorView = getWindow().getDecorView();
 
         mDecorView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener()

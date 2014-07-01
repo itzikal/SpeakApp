@@ -9,6 +9,9 @@ public class Card
     String mName;
     String mDescription;
 
+    private CardSize size;
+    private CardPosition position;
+
     //region properties
     public int getImage()
     {
@@ -45,5 +48,21 @@ public class Card
     {
         this.mName = mName;
         this.mImage = mImage;
+    }
+
+    public CardSize getSize() {
+        return size;
+    }
+
+    public void setSize(CardSize size) {
+        this.size = size;
+    }
+
+    public CardPosition getPosition() {
+        return position;
+    }
+
+    public void setPosition(CardPosition position) {
+        this.position = position;
     }
 }
