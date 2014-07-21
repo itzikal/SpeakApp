@@ -10,27 +10,22 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.GridView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.speakapp.adapters.CardsAdapter;
+import com.speakapp.Interfaces.OnCardClickListener;
+import com.speakapp.adapters.BoardAdapter;
 import com.speakapp.models.Board;
 import com.speakapp.models.BoardSize;
 import com.speakapp.models.Card;
 import com.speakapp.models.CardPosition;
 import com.speakapp.models.CardSize;
 import com.speakapp.speakapp.R;
-
-import java.util.ArrayList;
+import com.speakapp.ui.BoardLayout;
 
 
 public class MainActivity extends Activity
 {
-    private static final int GET_NEW_CARD = 1;
-    private ArrayList<Card> mActiveBoard;
-    private CardsAdapter mAdapter;
+    private BoardAdapter mAdapter;
     private View mDecorView;
     private GestureDetector mGestureDetector;
 
@@ -38,26 +33,25 @@ public class MainActivity extends Activity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        init();
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
-        findViewById(R.id.stam).setOnClickListener(new View.OnClickListener() {
+
+
+        final TextView textLine = (TextView) findViewById(R.id.text_line);
+        final BoardLayout b= (BoardLayout)findViewById(R.id.board_layout);
+        b.setOnCardClickListener(new OnCardClickListener()
+        {
             @Override
-            public void onClick(View view) {
-                Board board = new Board(new BoardSize(10,5));
-                Card itzik = new Card("itzik", 0);
-                itzik.setPosition(new CardPosition(0,0));
-                itzik.setSize(new CardSize(2,2));
-                board.addCard(itzik);
-
-                Card itzik2 = new Card("itzik", 0);
-                itzik2.setPosition(new CardPosition(1,1));
-                itzik2.setSize(new CardSize(2,2));
-                board.addCard(itzik2);
-
-                Toast.makeText(MainActivity.this, "number of cards: "+board.getCards().size(), Toast.LENGTH_LONG ).show();
+            public void onCardClicked(Card card)
+            {
+                if (card == null) return;
+                textLine.append(card.getName()+ " ");
             }
         });
+
+        mAdapter = new BoardAdapter(this, R.layout.card_layout, fillDemoValues());
+        b.setBoardAdapter(mAdapter);
+
         mDecorView = getWindow().getDecorView();
 
         mDecorView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener()
@@ -84,19 +78,7 @@ public class MainActivity extends Activity
         });
         mGestureDetector = new GestureDetector(this, new MyGestureListener());
 
-        final TextView textLine = (TextView) findViewById(R.id.text_line);
-        final GridView gridview = (GridView) findViewById(R.id.board_gird_view);
-        gridview.setAdapter(mAdapter);
-        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener()
-        {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
-            {
-                Card card = (Card) gridview.getAdapter().getItem(i);
-                textLine.append(card.getName());
-            }
-        });
-        findViewById(R.id.clear_text_line).setOnClickListener(new View.OnClickListener()
+               findViewById(R.id.clear_text_line).setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
@@ -105,13 +87,6 @@ public class MainActivity extends Activity
                 textLine.setText("");
             }
         });
-        //        findViewById(R.id.add_new_card_btn).setOnClickListener(new View.OnClickListener() {
-        //            @Override
-        //            public void onClick(View view)
-        //            {
-        //                startActivityForResult(new Intent(MainActivity.this, CreateCardActivity.class), GET_NEW_CARD);
-        //            }
-        //        });
     }
 
     @Override
@@ -142,18 +117,27 @@ public class MainActivity extends Activity
     }
 
 
-    private void init()
-    {
-        mActiveBoard = new ArrayList<Card>();
-        fillDemoValues(); // temp
-        mAdapter = new CardsAdapter(this, R.layout.card_layout, mActiveBoard);
-    }
 
-    private void fillDemoValues()
+    private Board fillDemoValues()
     {
-        mActiveBoard.add(new Card("כלב", R.drawable.dog));
-        mActiveBoard.add(new Card("חתול", R.drawable.cat));
-        mActiveBoard.add(new Card("איציק", R.drawable.mouse));
+        Board board = new Board(new BoardSize(6,6));
+        Card dog = new Card("כלב", R.drawable.dog);
+        dog.setSize(new CardSize(3,3));
+        dog.setPosition(new CardPosition(0,0));
+
+        Card cat = new Card("חתול", R.drawable.cat);
+        cat.setSize(new CardSize(1,1));
+        cat.setPosition(new CardPosition(0,4));
+
+        Card mouse = new Card("עכבר", R.drawable.mouse);
+        mouse.setSize(new CardSize(2,2));
+        mouse.setPosition(new CardPosition(4,4));
+
+        board.addCard(dog);
+        board.addCard(cat);
+        board.addCard(mouse);
+
+        return board;
     }
 
     @Override

@@ -5,70 +5,83 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.GridLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.speakapp.Interfaces.OnCardClickListener;
+import com.speakapp.models.Board;
+import com.speakapp.models.BoardSize;
+import com.speakapp.models.Card;
 import com.speakapp.speakapp.R;
 
-import java.util.ArrayList;
-import java.util.Random;
-
-public class BoardAdapter extends ArrayAdapter<String>
+public class BoardAdapter extends ArrayAdapter<Card>
 {
-    private Context m_context;
-    private ArrayList<String> m_cards;
-    private LayoutInflater m_layoutInflater;
-    public BoardAdapter(Context context, ArrayList<String> cards) {
-        super(context, R.layout.activity_main);
-        m_context = context;
-        m_cards = cards;
-        m_layoutInflater = LayoutInflater.from(context);
+    private final int mResource;
+    private Board mBoard;
+    private OnCardClickListener mOnCardClickListener;
+    private int mCellWidth;
+    private int mCellHight;
+
+    public BoardAdapter(Context context, int resource, Board board)
+    {
+        super(context, resource, board.getCards());
+        mResource = resource;
+        mBoard = board;
+    }
+
+    public BoardSize getBoardSize()
+    {
+        return mBoard.getSize();
     }
 
     @Override
-    public int getCount() {
-        return m_cards.size();
-    }
+    public View getView(final int position, View cardView, ViewGroup parent)
+    {
 
-//    @Override
-//    public Object getItem(int position) {
-//        return m_cards.get(position);
-//    }
-//
-//    @Override
-//    public long getItemId(int i) {
-//        return 0;
-//    }
+        LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = inflater.inflate(mResource, parent, false);
 
-    @Override
-    public View getView(int position, View cardView, ViewGroup parent) {
-        if(cardView == null) cardView = m_layoutInflater.inflate(R.layout.card_layout, null);
-       // ImageView cardImage = (ImageView) cardView.findViewById(R.id.cardImage);
-       // cardImage.setImageResource(R.drawable.ic_luncher);
+        final Card card = getItem(position);
 
-        TextView cardText = (TextView) cardView.findViewById(R.id.cardText);
-        cardText.setText(m_cards.get(position));
-
-        cardView.setOnClickListener(new View.OnClickListener() {
+        GridLayout.Spec row = GridLayout.spec(card.getPosition().x, card.getSize().getWidth());
+        GridLayout.Spec col = GridLayout.spec(card.getPosition().y, card.getSize().getHeight());
+        GridLayout.LayoutParams params = new GridLayout.LayoutParams(row, col);
+        params.height = card.getSize().getHeight() * mCellHight;
+        params.width = card.getSize().getWidth() * mCellWidth;
+        view.setLayoutParams(params);
+        view.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View view) {
-//                SoundManager.getInstance().playFormResource(getContext(), R.raw.dog);
-                switchBoard(randomCards());
+            public void onClick(View view)
+            {
+                mOnCardClickListener.onCardClicked(card);
             }
         });
-        return cardView;
+        ImageView image = (ImageView) view.findViewById(R.id.cardImage);
+        image.setImageResource(card.getImage());
+        //        image.setOnClickListener(new View.OnClickListener() {
+        //            @Override
+        //            public void onClick(View view)
+        //            {
+        //                mOnCardClickListener.onCardClicked(card);
+        //            }
+        //        });
+        ((TextView) view.findViewById(R.id.cardText)).setText(card.getName());
+
+
+        return view;
     }
 
-    public void switchBoard(ArrayList<String> newCards){
-        m_cards = newCards;
-        notifyDataSetChanged();
+    public void setOnCardClickListener(OnCardClickListener onCardClickListener)
+    {
+        mOnCardClickListener = onCardClickListener;
     }
 
-    private ArrayList<String> randomCards() {
-        ArrayList<String> randomCards = new ArrayList<String>();
-        Random a = new Random();
-        for(int i = 0; i < a.nextInt(50)+1; i++) {
-            randomCards.add("card " + i);
-        }
-        return randomCards;
+    public void setCellSize(int cellWidth, int cellHight)
+    {
+        mCellWidth = cellWidth;
+        mCellHight = cellHight;
     }
+
 }

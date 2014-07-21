@@ -35,22 +35,11 @@
             />
     </LinearLayout>
 
-
-        <GridView
-            android:id="@+id/board_gird_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentBottom="true"
-            android:layout_below="@+id/topLayout"
-            android:numColumns="auto_fit"
-
-            android:stretchMode="columnWidth"
-            android:gravity="center"
-            android:verticalSpacing="-2dp"
-
-            android:padding="5dp"
-            android:layout_margin="5dp"
-            android:listSelector="@android:color/transparent"
-            android:background="@drawable/card_border">
-        </GridView>
+    <com.speakapp.ui.BoardLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/card_border"
+        android:columnCount="10"
+        android:rowCount="10"
+        android:id="@+id/board_layout"/>
 </LinearLayout>
